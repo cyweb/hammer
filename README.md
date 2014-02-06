@@ -1,2 +1,2 @@
-1. How to use Hammer [`Watch it`](https://github.com/banister/binding_of_caller) 
+1. How to use Hammer [`Watch it`](http://www.youtube.com/watch?v=HVbRUhX2EPo) 
 2. Fork it...
