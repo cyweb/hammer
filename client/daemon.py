@@ -1,8 +1,6 @@
 import api, time
 
-from api import *
-
-from main import main
+from main import main, api
 
 if __name__ == '__main__':
   while True:

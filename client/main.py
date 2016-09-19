@@ -1,5 +1,7 @@
 from ddos import main as ddos
-import api
+from api import API
+
+api = API()
 
 def main():
   data = api.get_data()
