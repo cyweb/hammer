@@ -6,14 +6,13 @@ import config
 
 class API:
   def __init__(self):
-    html = self.get_html()
+    html = self.get_or_update_html()
 
-  def get_html(self):
+  def get_or_update_html(self):
     req = requests.get(config.URL)
-    soup = BeautifulSoup(req.text)
+    soup = BeautifulSoup(req.text, 'lxml')
 
-    global html
-    html = soup.body
+    self.html = soup.body
 
 
   def get_data(self):
@@ -21,7 +20,7 @@ class API:
     # get html from website
     
     # get formatted data config
-    data = html.h2.get_text().strip().split(':')
+    data = self.html.h2.get_text().strip().split(':')
 
     try: addr["host"] = data[0]
     except: addr["host"] = '77.88.55.55'
@@ -33,6 +32,6 @@ class API:
 
 
   def is_needed(self):
-    needed = html.h1.get_text().strip()
-
+    self.get_or_update_html()
+    needed = self.html.h1.get_text().strip()
     return needed.upper() == 'YES'

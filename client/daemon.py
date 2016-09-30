@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import api, time
 
 from main import main, api
