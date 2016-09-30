@@ -1,16 +1,18 @@
 import requests
-
 from bs4 import BeautifulSoup
+import sys
 
-import config
+sys.path.insert(0, r'../')
+
+from server import config
 
 class API:
   def __init__(self):
-    html = self.get_or_update_html()
+    self.html = self.get_or_update_html()
 
   def get_or_update_html(self):
     req = requests.get(config.URL)
-    soup = BeautifulSoup(req.text, 'lxml')
+    soup = BeautifulSoup(req.text)
 
     self.html = soup.body
 
