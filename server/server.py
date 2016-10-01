@@ -1,13 +1,13 @@
-from flask import Flask, render_template
+from flask import Flask, jsonify
 
 from config import SERVER
 from victim import VICTIM
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template("index.html", victim=VICTIM)
+    return jsonify(VICTIM)
 
 if __name__ == "__main__":
-    app.run(host=SERVER["host"], port=SERVER["port"])
+    app.run(port=SERVER["port"])

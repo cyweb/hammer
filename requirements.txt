@@ -1,4 +1,3 @@
 requests
-libxml2
-bs4
+json
 flask
