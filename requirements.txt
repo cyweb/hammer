@@ -1,2 +1,4 @@
 requests
+libxml2
 bs4
+flask
