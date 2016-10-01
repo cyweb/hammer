@@ -143,3 +143,7 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+server.tar.gz
+server/victim.py
+server/config.py
