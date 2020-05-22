@@ -81,7 +81,7 @@ def usage():
 	usage : python3 hammer.py [-s] [-p] [-t]
 	-h : help
 	-s : server ip
-	-p : port default 80
+	-p : port default 1250
 	-t : turbo default 135 \033[0m''')
 	sys.exit()
 
@@ -106,7 +106,7 @@ def get_parameters():
 	else:
 		usage()
 	if opts.port is None:
-		port = 80
+		port = 1250
 	else:
 		port = opts.port
 	if opts.turbo is None:
