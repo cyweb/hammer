@@ -24,11 +24,19 @@ def user_agent():
 
 
 def my_bots():
-	global bots
-	bots=[]
-	bots.append("http://validator.w3.org/check?uri=")
-	bots.append("http://www.facebook.com/sharer/sharer.php?u=")
-	return(bots)
+    global bots
+    bots=[]
+    bots.append("http://validator.w3.org/check?uri=")
+    bots.append("http://www.facebook.com/sharer/sharer.php?u=")
+    bots.append("http://twitter.com/home?status=")
+    bots.append("https://www.linkedin.com/shareArticle?mini=true&url=")
+    bots.append("https://www.reddit.com/submit?url=")
+    bots.append("https://plus.google.com/share?url=")
+    bots.append("https://pinterest.com/pin/create/button/?url=")
+    bots.append("https://www.tumblr.com/widgets/share/tool?posttype=link&title=&caption=&content=&canonicalUrl=&shareSource=tumblr_share_button")
+    bots.append("https://telegram.me/share/url?text=&url=")
+    bots.append("https://www.stumbleupon.com/submit?url=")
+    return(bots)
 
 
 def bot_hammering(url):
