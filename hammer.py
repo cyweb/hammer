@@ -75,13 +75,13 @@ def dos2():
 
 
 def usage():
-	print (''' \033[92m	Hammer Dos Script v.1 http://www.canyalcin.com/
+	print (''' \033[92m  witherslee  Hammer Dos Script v.1 http://www.canyalcin.com/
 	It is the end user's responsibility to obey all applicable laws.
-	It is just for server testing script. Your ip is visible. \n
+	It is just for server testing script. Your ip is visible. \n    withersleep
 	usage : python3 hammer.py [-s] [-p] [-t]
-	-h : help
-	-s : server ip
-	-p : port default 80
+	-h : help  withersleep
+	-s : server ip  witjersleep               withersleep
+	-p : port default 80 withersleep          
 	-t : turbo default 135 \033[0m''')
 	sys.exit()
 
