@@ -1,2 +1,2 @@
-1. How to use Hammer [`Watch it`](http://www.youtube.com/watch?v=HVbRUhX2EPo) 
+https://github.com/cyweb/hammer.git1. How to use Hammer [`Watch it`](http://www.youtube.com/watch?v=HVbRUhX2EPo) 
 2. Fork it...
